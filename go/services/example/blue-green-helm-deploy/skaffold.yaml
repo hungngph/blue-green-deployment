@@ -1,0 +1,32 @@
+# skaffold.yaml
+apiVersion: skaffold/v2beta24
+kind: Config
+profiles:
+  - name: prod-blue
+    deploy:
+      helm:
+        releases:
+          - name: example-blue
+            chartPath: go/services/example/blue-green-helm-deploy/example
+            valuesFiles:
+              - go/services/example/blue-green-helm-deploy/example/values-prod.yaml
+            setValueTemplates:
+              testColor: blue
+            artifactOverrides:
+              image: asia.gcr.io/your-project/example
+            imageStrategy:
+              fqn: {}
+  - name: prod-green
+    deploy:
+      helm:
+        releases:
+          - name: example-green
+            chartPath: go/services/example/blue-green-helm-deploy/example
+            valuesFiles:
+              - go/services/example/blue-green-helm-deploy/example/values-prod.yaml
+            setValueTemplates:
+              testColor: green
+            artifactOverrides:
+              image: asia.gcr.io/your-project/example
+            imageStrategy:
+              fqn: {}

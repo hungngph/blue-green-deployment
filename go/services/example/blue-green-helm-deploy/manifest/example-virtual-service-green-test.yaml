@@ -1,0 +1,34 @@
+# example-virtual-service-green-test.yaml
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: example
+  namespace: test
+spec:
+  hosts:
+  - your-domain.com
+  gateways:
+  - istio-system/default-gateway
+  http:
+  - name: example-test
+    match:
+    - uri:
+        prefix: /example
+      headers:
+        cookie:
+          regex: ^(.\*?;)?(test=true)(;.\*)?$
+    route:
+    - destination:
+        host: example-green
+        port:
+          number: 8088
+
+  - name: example-default
+    match:
+    - uri:
+        prefix: /example
+    route:
+    - destination:
+        host: example-blue
+        port:
+          number: 8088

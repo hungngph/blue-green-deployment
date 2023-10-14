@@ -1,0 +1,17 @@
+# example-service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service }}-{{ .Values.testColor }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.service}}
+    release: {{ .Values.release }}
+spec:
+  type: NodePort
+  ports:
+    - port: 8088
+      name: http
+  selector:
+    app: {{ .Values.service }}
+    color: {{ .Values.testColor }}

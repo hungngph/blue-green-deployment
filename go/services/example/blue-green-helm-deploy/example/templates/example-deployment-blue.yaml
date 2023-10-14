@@ -1,0 +1,50 @@
+# example-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.service }}-{{ .Values.release }}-{{ .Values.testColor }}
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: {{ .Values.service}}
+    release: {{ .Values.release }}
+    color: {{ .Values.testColor }}
+spec:
+  replicas: {{ .Values.replicaCount}}
+  selector:
+    matchLabels:
+      app: {{ .Values.service }}
+      release: {{ .Values.release }}
+      color: {{ .Values.testColor }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.service }}
+        release: {{ .Values.release }}
+        color: {{ .Values.testColor }}
+    spec:
+      containers:
+        - name: {{ .Values.service }}
+          image: {{ .Values.image }}
+          command: {{ .Values.cmd | toJson }}
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8088
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /ready
+              port: 8088
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          ports:
+            - containerPort: 8088
+              name: http
+          resources:
+            requests:
+              cpu: {{ .Values.reqCpu | quote }}
+              memory: {{ .Values.reqMem | quote }}
+            limits:
+              cpu: {{ .Values.limCpu | quote }}
+              memory: {{ .Values.limMem | quote }}

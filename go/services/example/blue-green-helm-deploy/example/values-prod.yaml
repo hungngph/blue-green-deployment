@@ -1,0 +1,13 @@
+# values-prod.yaml
+replicaCount: 1
+service: example
+namespace: test
+image: asia.gcr.io/your-project/example
+release: prod
+reqCpu: 50m
+reqMem: 50Mi
+limCpu: 100m
+limMem: 128Mi
+cmd: ['go/services/example/example',
+      '--default_env=PROD',
+]
